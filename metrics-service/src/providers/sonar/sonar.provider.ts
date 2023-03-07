@@ -7,7 +7,7 @@ export async function getSonarMetrics(metadata: ISonarMetadata) {
   const result: IPoint[] = [];
 
   for (const project of metadata.projects) {
-    logger.info(`Getting sonar measures for: ${project}`);
+    logger.info(`Getting sonar measures for: ${project.projectKey}`);
 
     let next = true;
     let page = 1;
@@ -15,12 +15,12 @@ export async function getSonarMetrics(metadata: ISonarMetadata) {
     while (next) {
       page > 1 && logger.debug(`Getting next page: ${page}`);
   
-      const res = await axios.post<ISonarMeasureResponse>(`${metadata.url}/api/measures/search_history?component=${project}&metrics=${metadata.metrics}&p=${page}`, {}, {
+      const res = await axios.post<ISonarMeasureResponse>(`${metadata.url}/api/measures/search_history?component=${project.projectKey}&metrics=${metadata.metrics}&p=${page}`, {}, {
         auth: { username: metadata.key, password: '' }
       });
       
       for (const measure of res.data.measures) {
-        result.push(...map(project, measure));
+        result.push(...map(project.name, measure));
       }
   
       next = page < res.data.paging.total / res.data.paging.pageSize;
