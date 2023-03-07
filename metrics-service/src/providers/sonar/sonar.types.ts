@@ -1,9 +1,14 @@
 export interface ISonarMetadata {
-    key: string;
-    url: string;
-    projects: string[];
-    metrics: string[];
-  }
+  key: string;
+  url: string;
+  projects: ISonarProjectMetadata[];
+  metrics: string[];
+}
+
+export interface ISonarProjectMetadata {
+  name: string;
+  projectKey: string
+}
 
 export interface ISonarProjectResponse {
   paging: {
